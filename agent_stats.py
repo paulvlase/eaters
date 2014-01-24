@@ -2,15 +2,17 @@
 import math
 from PyQt4 import QtCore, QtGui
 
+from global_config import GlobalConfig
+
 
 class AgentStats(QtGui.QWidget):
 
 	def __init__(self, robot):
-		super(RobotStatsWidget, self).__init__(None)
+		super(AgentStats, self).__init__(None)
 		
 		self.robot = robot
 		
-		self.initStatsWidget()
+		self.initUI()
 	
 	
 	def initUI(self):

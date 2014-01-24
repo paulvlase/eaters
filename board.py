@@ -1,10 +1,14 @@
 # File: board.py
 
 import math
+import random
 from PyQt4 import QtCore, QtGui
 
 from agent import Agent
 from board_stats import BoardStats
+from food import BonusFood, NormalFood
+from global_config import GlobalConfig
+from wall import Wall
 
 
 """
@@ -15,8 +19,8 @@ class Board(QtGui.QFrame):
 	
 	msg2Statusbar = QtCore.pyqtSignal(str)
 	
-	Width = 650
-	Height = 480
+	Width = 17
+	Height = 17
 	Speed = 100
 	
 	
@@ -25,8 +29,11 @@ class Board(QtGui.QFrame):
 	
 		self.parent = parent
 	
-		self.initUI()
+		self.initBoard()
 		self.initAgents()
+		
+		self.initUI()
+	
 	
 	def initUI(self):
 		QtCore.qDebug('sim_map.Map.initMap')
@@ -34,18 +41,68 @@ class Board(QtGui.QFrame):
 		self.timer = QtCore.QBasicTimer()
 		self.setFrameStyle(QtGui.QFrame.Panel | QtGui.QFrame.Raised)
 		
-		self.objects = []
 		self.setFocusPolicy(QtCore.Qt.StrongFocus)
-		self.setFixedSize(Board.Width, Board.Height)
+		self.setFixedSize(Board.Width * GlobalConfig.BlockDim + 1, Board.Height * GlobalConfig.BlockDim + 1)
 		self.isStarted = False
 		self.isPaused = False
-		self.clearMap()
 
 		self.boardStats = BoardStats(self)
 	
 	
+	def initBoard(self):
+		self.blocks = []
+		
+		for i in range(Board.Height):
+			for j in range(Board.Width):
+				self.blocks.append(None)
+		
+		for j in range(Board.Width):
+			self.setBlockAt(0, j, Wall(0, j))
+			self.setBlockAt(Board.Width - 1, j, Wall(Board.Width - 1, j))
+		
+		for i in range(1, Board.Height - 1):
+			self.setBlockAt(i, 0, Wall(i, 0))
+			self.setBlockAt(i, Board.Height - 1, Wall(i, Board.Height - 1))
+	
+		n = random.randint(0, math.floor(Board.Width * Board.Height / 2))
+		
+		for k in range(n):
+
+			i = random.randint(1, Board.Width - 1)
+			j = random.randint(1, Board.Height - 1)
+			
+			if self.getBlockAt(i, j) is None and\
+					self.getBlockAt(i - 1, j - 1) is None and\
+					self.getBlockAt(i - 1, j + 1) is None and\
+					self.getBlockAt(i + 1, j - 1) is None and\
+					self.getBlockAt(i + 1, j + 1) is None:
+				self.setBlockAt(i, j, Wall(i, j))
+		
+		
+		for j in range(1, Board.Width - 1):
+		
+			if j % 3 == 2:
+				for i in range(1, Board.Height - 1):
+				
+					if self.getBlockAt(i, j) is None:
+						self.setBlockAt(i, j, BonusFood(i, j))
+						
+			else:
+				for i in range(1, Board.Height - 1):
+				
+					if self.getBlockAt(i, j) is None:
+						self.setBlockAt(i, j, NormalFood(i, j))
+	
+	
 	def initAgents(self):
-		pass
+		self.agents = []
+		
+		i = random.randint(1, Board.Width - 2)
+		j = random.randint(1, Board.Height - 2)
+		
+		agent = Agent(i, j)
+		self.agents.append(agent)
+		self.setBlockAt(i, j, agent)
 	
 	
 	def start(self):
@@ -82,6 +139,7 @@ class Board(QtGui.QFrame):
 		self.update()
 	
 	
+	
 	def paintEvent(self, event):
 		
 		painter = QtGui.QPainter(self)
@@ -92,8 +150,9 @@ class Board(QtGui.QFrame):
 		#QtCore.qDebug('[sim_map.Map.paintEvent] %d %d %d %d' % (rect.top(), rect.left(), rect.bottom(), rect.right())) 
 		painter.fillRect(0, 0, rect.right(), rect.bottom(), QtGui.QColor(0xffffff))
 		
-		for obj in self.objects:
-			obj.draw(painter)
+		for block in self.blocks:
+			if block is not None:
+				block.draw(painter)
 	
 	
 	def keyPressEvent(self, event):
@@ -143,9 +202,14 @@ class Board(QtGui.QFrame):
 			super(Map, self).timerEvent(event)
 	
 	
-	def clearMap(self):
-		self.objects = []
-
+	
+	def getBlockAt(self, i, j):
+		return self.blocks[i * Board.Width + j]
+	
+	
+	def setBlockAt(self, i, j, block):
+		self.blocks[i * Board.Width + j] = block
+	
 	
 	def getStatsWidgets(self):
 		
