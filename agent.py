@@ -23,6 +23,14 @@ class Agent(Block):
 	def __init__(self, i, j, color):
 		super(Agent, self).__init__(i, j)
 	
+		self.state = Node('s1')
+		self.state.addAugmentation('type', 'state')
+		
+		self.initUI()
+	
+	
+	def initUI(self):
+		
 		self.color = color
 		self.direction = Direction.NORTH
 		self.animationStep = 0
