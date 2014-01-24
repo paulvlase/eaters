@@ -33,6 +33,8 @@ class Board(QtGui.QFrame):
 		self.initAgents()
 		
 		self.initUI()
+		
+		self.timer.start(Board.Speed, self)
 	
 	
 	def initUI(self):
@@ -116,8 +118,6 @@ class Board(QtGui.QFrame):
 		self.clearMap()
 		
 		self.msg2Statusbar.emit(str(0))
-		
-		self.timer.start(Map.Speed, self)
 	
 	
 	def pause(self):
@@ -194,9 +194,7 @@ class Board(QtGui.QFrame):
 		
 		if event.timerId() == self.timer.timerId():
 			
-			if self.robot is not None:
-				self.robot.move()
-				self.repaint()
+			self.repaint()
 		
 		else:
 			super(Map, self).timerEvent(event)
