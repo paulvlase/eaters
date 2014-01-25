@@ -7,6 +7,12 @@
 '''
 
 class MoveToFoodAgent(Agent):
+
+	def __init__(self, i, j):
+		super(MoveToFoodAgent, self).__init__(i, j)
+
+		self.color = 0xFF0000
+
 	
 	def proposePhase(self):
 		pass
@@ -33,15 +39,17 @@ class MoveToFoodAgent(Agent):
 	'''
 	def propose_moveToFood(self):
 		
-		for io in self.state.getAugmentations('io'):
-			for il in io.getAugmentations('^input-link'):
-				for ml in il.getAugmentations('^my-location'):
-					for di in ml.getAugmentations(''):
-						for co in di.getAugmentations('content'):
-							o = self.state.addAugmentation('^operator', '+=')
-							o.addAugmentation('^name', 'move-to-food')
-							o.addAugmentation('^direction', di.name)
-
+		for _s in self.state.get('^state'):
+			for _io in _s.get('^io'):
+				for _il in _io.get('^input-link'):
+					for _ml in _il.get('^my-location'):
+						for _di in _ml.get(''):
+							for _co in _di.get('^content'):
+								o = _s.add('^operator', '', Flag.PLUS | Flag.EQUAL)
+								o.add('^name', 'move-to-food')
+								o.add('^direction', di.name)
+	
+	
 	'''
 	# Apply*move-to-food
 	# If the move-to-food operator for a direction is selected,
@@ -57,13 +65,15 @@ class MoveToFoodAgent(Agent):
 	'''
 	def apply_moveToFood:
 		
-		for io in self.state.getAugmentations('io'):
-			for ol in io.getAugmentations('output-link'):
-				for o in self.state.getAugmentations('operator'):
-					if o.hasAugmentation('^name', 'move-to-food'):
-						for di in o.getAugmentation('^direction'):
-							d = ol.addAugmentation('^move')
-							d.addAugmentation(di.name)
+		for _s in self.state.get('^state'):
+			for _io in _s.get('^io'):
+				for _ol in _io.get('^output-link'):
+					for _o in _s.get('^operator'):
+						for _n in _o.get('^name', 'move-to-food'):
+							for _di in _o.get('^direction'):
+								_d = _ol.add('^move')
+								_d.add(di.name)
+	
 	
 	'''
 	# Apply*move-to-food*remove-move:
@@ -81,10 +91,11 @@ class MoveToFoodAgent(Agent):
 	'''
 	def apply_moveToFood_removeMove:
 		
-		for _io in self.state.getAugmentations('^io'):
-			for _ol in self.getAugmentations('^output-link'):
-				for _o in self.state.getAugmentations('^operator'):
-					if _o.hasAugmentation('^name', 'move-to-food'):
-						for _move in ol.getAugmentations('^move'):
-							if _move.hasAugmentation('^status', 'complete'):
-								ol.removeAugmentation('^move', _move)
+		for _s in self.state.get('^state'):
+			for _io in _s.get('^io'):
+				for _ol in _io.get('^output-link'):
+					for _o in _s.get('^operator'):
+						for _n in _o.get('^name', 'move-to-food'):
+							for _move in ol.get('^move'):
+								for _s in _move.get('^status', 'complete'):
+									_ol.remove('^move', _move)

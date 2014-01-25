@@ -1,18 +1,22 @@
 
-'''
-############################ Move-north operator ############################
-'''
+from agent import Agent
+from datamap import Flag, Node
 
 class MoveNorthAgent(Agent):
 	
+	def __init__(self, i, j):
+		super(MoveNorthAgent, self).__init__(i, j)
+	
 	def proposePhase(self):
-		pass
+		
+		self.propose_moveNorth()
 	
 	def decisionPhase(self):
 		pass
 	
 	def applyPhase(self):
-		pass
+		
+		self.apply_moveNorth()
 	
 	'''
 	# Propose*move-north:
@@ -26,11 +30,12 @@ class MoveNorthAgent(Agent):
 	'''
 	def propose_moveNorth(self):
 		
-		if self.state.hasAugmentation('^type', 'state'):
-			
-			o = self.state.addAugmentation('^operator', '', '+')
-			o.addAugmentation('^name', 'move-north')
-
+		for _s in self.state.get('^state'):
+			for _t in s.get('^type', 'state'):
+				_o = s.add('^operator', '', Flag.PLUS)
+				_o.add('^name', 'move-north')
+	
+	
 	'''
 	# Apply*move-north:
 	# If the move-north operator is selected, then generate an output command to 
@@ -55,12 +60,11 @@ class MoveNorthAgent(Agent):
 	'''
 	def apply_moveNorth(self):
 		
-		os = 
-		
-		for o in self.state.getAugmentations('^operator')
-			if o.hasAugmentation('^name', 'move-north')
-				for io in self.state.getAugmentations('^io')
-					for ol in io.getAugmentations('^output-link')
-						for ol in io.getAugmentations('^output-link')
-							m = ol.addAugmentation('^move')
-							m.addAugmentation('^direction', 'north')
+		for _s in self.state.get('^state'):
+			for _o in _s.get('^operator'):
+				for _n in _o.get('^name', 'move-north'):
+					for _io in _s.get('^io'):
+						for _ol in _io.get('^output-link'):
+							for _ol in _io.get('^output-link'):
+								_m = _ol.add('^move')
+								_m.add('^direction', 'north')

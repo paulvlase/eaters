@@ -1,4 +1,6 @@
 
+from datamap import Filter, Node
+
 '''
 # Corrected from move-north.soar so that operator applies more than once.
 '''
@@ -31,14 +33,16 @@ class MoveNorth2Agent(Agent):
 	'''
 	def propose_moveNorth(self):
 		
-		for s in self.state.getAugmentations('^state'):
-			for io in s.getAugmentations('^io'):
-				for il in io.getAugmentations('input-link'):
-					for e in il.getAugmentations('eater'):
-						for x in e.getAugmentations('^x'):
-							for y in e.getAugmentations('^y'):
-								o = s.addAugmentation('^operator'), '+')
-								o.addAugmentation('^name', 'move-north')
+		for _s in self.state.get('^state'):
+			for _io in _s.get('^io'):
+				for _il in _io.get('^input-link'):
+					for _e in _il.get('^eater'):
+						for _x in _e.get('^x'):
+							for _y in _e.get('^y'):
+								_o = s.add('^operator', '', Flag.PLUS)
+								_o.add('^name', 'move-north')
+	
+	
 	'''
 	# Apply*move-north:
 	# If the move-north operator is selected, then generate an output command to 
@@ -52,13 +56,14 @@ class MoveNorth2Agent(Agent):
 	'''
 	def apply_moveNorth(self):
 		
-		for _s in self.state.getAugmentations('^state'):
-			for _o in _s.getAugmentations('^operator'):
-				for _name in _o.getAugmentations('^name', 'move-north'):
-					for _io in _s.getAugmentations('^io'):
-						for _ol in _io.getAugmentations('^output-link'):
-							_move = _ol.addAugmentation('^move')
-							_move.addAugmention('^direction', 'north')
+		for _s in self.state.get('^state'):
+			for _o in _s.get('^operator'):
+				for _n in _o.get('^name', 'move-north'):
+					for _io in _s.get('^io'):
+						for _ol in _io.get('^output-link'):
+							_move = _ol.add('^move')
+							_move.add('^direction', 'north')
+	
 	
 	'''
 	# Apply*move-north*remove-move
@@ -73,14 +78,14 @@ class MoveNorth2Agent(Agent):
 	-->
 		(<ol> ^move <move> -)}
 	'''
-	def apply_moveNorth_RemoveMove(self):
+	def apply_moveNorth_removeMove(self):
 		
-		for _s in self.state.getAugmentations('^state'):
-			for _o in _s.getAugmentations('^operator'):
-				for _name in _o.getAugmentations('^name', 'move-north'):
-					for _io in s.getAugmentations('^io'):
-						for _ol in _io.getAugmentations('output-link'):
-							for _move in _ol.getAugmentations('^move'):
-								for _a1 in _move.getAugmentations('^status'):
+		for _s in self.state.get('^state'):
+			for _o in _s.get('^operator'):
+				for _n in _o.get('^name', 'move-north'):
+					for _io in _s.get('^io'):
+						for _ol in _io.get('^output-link'):
+							for _move in _ol.get('^move'):
+								for _s in _move.get('^status'):
 									_ol.removeAugmentation('^move', _move)
 	

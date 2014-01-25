@@ -4,7 +4,7 @@ import math
 import random
 from PyQt4 import QtCore, QtGui
 
-from agent import Agent
+from move_north_agent import MoveNorthAgent
 from board_stats import BoardStats
 from food import BonusFood, NormalFood
 from global_config import GlobalConfig
@@ -102,7 +102,7 @@ class Board(QtGui.QFrame):
 		i = random.randint(1, Board.Width - 2)
 		j = random.randint(1, Board.Height - 2)
 		
-		agent = Agent(i, j)
+		agent = MoveNorthAgent(i, j)
 		self.agents.append(agent)
 		self.setBlockAt(i, j, agent)
 	

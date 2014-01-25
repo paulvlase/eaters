@@ -5,6 +5,7 @@ from PyQt4 import QtCore, QtGui
 
 from agent_stats import AgentStats
 from block import Block
+from datamap_node import DataMapNode
 from global_config import GlobalConfig
 
 
@@ -18,12 +19,11 @@ class Agent(Block):
 		Paul v0.0:
 	"""
 	
-	
-	
-	def __init__(self, i, j, color):
+	def __init__(self, i, j):
 		super(Agent, self).__init__(i, j)
 	
-		self.state = Node('s1')
+		self.state = DataMapNode('.')
+		self.state['^state'] = 's1'
 		self.state.addAugmentation('type', 'state')
 		
 		self.initUI()
@@ -31,7 +31,7 @@ class Agent(Block):
 	
 	def initUI(self):
 		
-		self.color = color
+		self.color = 0xAAAAAA
 		self.direction = Direction.NORTH
 		self.animationStep = 0
 		self.animationDirStep = 1
@@ -52,19 +52,19 @@ class Agent(Block):
 		pass
 	
 	
-	def self.proposePhase(self):
+	def proposePhase(self):
 		pass
 	
 	
-	def self.decisionPhase(self):
+	def decisionPhase(self):
 		pass
 	
 	
-	def self.applyPhase(self):
+	def applyPhase(self):
 		pass
 	
 	
-	def self.outputPhase(self):
+	def outputPhase(self):
 		pass
 	
 	
@@ -72,7 +72,7 @@ class Agent(Block):
 		d = GlobalConfig.BlockDim
 		
 		painter.setPen(QtGui.QColor(0x000000))
-		painter.setBrush(QtGui.QColor(color))
+		painter.setBrush(QtGui.QColor(self.color))
 		
 		rect = QtCore.QRect(round(self.j * d + d * 0.1), round(self.i * d + d * 0.1), round(d * 0.8),round( d * 0.8))
 		

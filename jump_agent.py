@@ -25,22 +25,26 @@ class JumpAgent(Agent):
 	'''
 	def initialize_state_directions(self):
 		
-		n = self.state.addAugmentation('^directions')
-		e = self.state.addAugmentation('^directions')
-		s = self.state.addAugmentation('^directions')
-		w = self.state.addAugmentation('^directions')
+		for _s in self.state.get('^state'):
+			for _t in _s.get('^type'):
 		
-		n.addAugmentation('^value', 'north')
-		n.addAugmentation('^opposite', 'south')
+				_n = self.state.add('^directions')
+				_e = self.state.add('^directions')
+				_s = self.state.add('^directions')
+				_w = self.state.add('^directions')
 		
-		e.addAugmentation('^value', 'east')
-		e.addAugmentation('^opposite', 'west')
+				_n.add('^value', 'north')
+				_n.add('^opposite', 'south')
 		
-		s.addAugmentation('^value', 'south')
-		s.addAugmentation('^opposite', 'north')
+				_e.add('^value', 'east')
+				_e.add('^opposite', 'west')
+		
+				_s.add('^value', 'south')
+				_s.add('^opposite', 'north')
 	
-		w.addAugmentation('^value', 'west')
-		w.addAugmentation('^opposite', 'east')
+				_w.add('^value', 'west')
+				_w.add('^opposite', 'east')
+	
 	
 	'''
 	# Propose*jump:
@@ -59,15 +63,15 @@ class JumpAgent(Agent):
 	'''
 	def propose_jump:
 		
-		for io in self.state.getAugmentations('^io'):
-			for il in io.getAugmentations('input-link'):
-				for ml in il.getAugmentations('my-location'):
-					for _dir in ml.getAugmentations(''):
-						for _content in _dir.getAugmentations('_content'):
-							if _content != 'wall':
-								o = self.state.addAugmentation('^operator', '+, =')
-								o.addAugmentation('^name', 'jump')
-								o.addAugmentation('^content', _content)
+		for _s in self.state.get('^state'):
+			for _io in _s.get('^io'):
+				for _il in _io.get('^input-link'):
+					for _ml in _il.get('^my-location'):
+						for _dir in _ml.get(''):
+							for _content in _dir.get('_content', '<> wall'):
+								_o = _s.add('^operator', '+, =')
+								_o.add('^name', 'jump')
+								_o.add('^content', _content)
 	
 	'''
 	# Apply*move*jump
@@ -84,13 +88,15 @@ class JumpAgent(Agent):
 	'''
 	def apply_move_jump:
 		
-		for io in self.state.getAugmentations('^io'):
-			for ol in io.getAugmentations('^output-link'):
-				for o in self.state.getAugmentations('^operator'):
-					 for _name in o.getAugmentations('^name', ('move', 'jump')):
-						 for _dir in o.getAugmentations('^direction'):
-							 d = ol.addAugmentation('^' + _name)
-							 d.addAugmentation('^direction', _dir)
+		for _s in self.state.get('^state'):
+			for _io in _s.get('^io'):
+				for _ol in _io.get('^output-link'):
+					for _o in _s.get('^operator'):
+						for _name in o.get('^name', ('move', 'jump')):
+							for _dir in _o.get('^direction'):
+								_d = ol.add('^' + _name)
+								_d.add('^direction', _dir)
+	
 	
 	'''
 	# Apply*move*jump*remove-name:
@@ -108,11 +114,12 @@ class JumpAgent(Agent):
 	'''
 	def apply_move_jump_removeName:
 		
-		for io in self.state.getAugmentations('^io'):
-			for ol in io.getAugmentations('^output-link'):
-				for o in self.state.getAugmentations('^operator'):
-					for _name in o.getAugmentations('^name'):
-						for _direction in ol.getAugmentations('^' + _name):
-							for v1 in _direction.getAugmentations('^status'):
-								ol.removeAugmentation('^' + name, _direction)
+		for _s in self.state.get('^state'):
+			for _io in _s.get('^io'):
+				for _ol in _io.get('^output-link'):
+					for _o in _s.get('^operator'):
+						for _name in _o.get('^name'):
+							for _direction in _ol.get('^' + _name):
+								for _v1 in _direction.get('^status'):
+									_ol.remove('^' + _name, _direction)
 	
