@@ -1,5 +1,7 @@
 
-from datamap import Filter, Node
+from agent import Agent
+from datamap import	Node
+
 
 '''
 # Corrected from move-north.soar so that operator applies more than once.
@@ -39,8 +41,8 @@ class MoveNorth2Agent(Agent):
 					for _e in _il.get('^eater'):
 						for _x in _e.get('^x'):
 							for _y in _e.get('^y'):
-								_o = s.add('^operator', '', Flag.PLUS)
-								_o.add('^name', 'move-north')
+								_o = s.add('^operator o +')
+								_o.add('^name move-north')
 	
 	
 	'''
@@ -58,11 +60,11 @@ class MoveNorth2Agent(Agent):
 		
 		for _s in self.state.get('^state'):
 			for _o in _s.get('^operator'):
-				for _n in _o.get('^name', 'move-north'):
+				for _n in _o.get('^name move-north'):
 					for _io in _s.get('^io'):
 						for _ol in _io.get('^output-link'):
 							_move = _ol.add('^move')
-							_move.add('^direction', 'north')
+							_move.add('^direction north')
 	
 	
 	'''
@@ -82,10 +84,10 @@ class MoveNorth2Agent(Agent):
 		
 		for _s in self.state.get('^state'):
 			for _o in _s.get('^operator'):
-				for _n in _o.get('^name', 'move-north'):
+				for _n in _o.get('^name move-north'):
 					for _io in _s.get('^io'):
 						for _ol in _io.get('^output-link'):
 							for _move in _ol.get('^move'):
 								for _s in _move.get('^status'):
-									_ol.removeAugmentation('^move', _move)
+									_ol.remove('^move ' + _move)
 	

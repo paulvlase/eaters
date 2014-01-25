@@ -9,7 +9,12 @@ class Node(object):
 		self.gRand = 1
 	
 	
-	def add(self, name, value = '', flag = Flag.NOTHING):
+	def add(self, augm):
+		toks = augm.split()
+		
+		name = toks[0]
+		value = toks[1]
+		
 		v = value
 		if value is None:
 			if name == '^operator':
@@ -21,25 +26,28 @@ class Node(object):
 				v = Node(v, flag)
 				self.gRand = self.gRand + 1 
 		
-		self.augmentations.append((name, v))
+		self.augments.append((name, v))
 		
 		return v
 	
 	
-	def get(self, name, value = None, flag = Flag.NOTHING):
+	def get(self, augm):
+		
+		toks = augm.split()
+		
+		name = toks[0]
+		value = tocks[1]
 		
 		augms = []
-		for augm in self.augments:
-			if augm[0] == name:
-				if value is None or value == augm[1]:
-				augms.append(augm)
+		for a in self.augments:
+			if a[0] == name:
+				if value is None or value == a[1]:
+					augms.append(a)
 		
 		return augms
 
-
-class Flag(object):
 	
-	NOTHING = 0
-	PLUS = 1
-	EQUAL = 2
+	def remove(self, augm):
+		
+		pass
 	

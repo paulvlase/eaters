@@ -1,4 +1,8 @@
 
+from agent import Agent
+from datamap import	Node
+
+
 class JumpAgent(Agent):
 	
 	def proposePhase(self):
@@ -68,10 +72,10 @@ class JumpAgent(Agent):
 				for _il in _io.get('^input-link'):
 					for _ml in _il.get('^my-location'):
 						for _dir in _ml.get(''):
-							for _content in _dir.get('_content', '<> wall'):
-								_o = _s.add('^operator', '+, =')
-								_o.add('^name', 'jump')
-								_o.add('^content', _content)
+							for _content in _dir.get('_content <> wall'):
+								_o = _s.add('^operator o + =')
+								_o.add('^name jump')
+								_o.add('^content ' + _content)
 	
 	'''
 	# Apply*move*jump
@@ -92,10 +96,10 @@ class JumpAgent(Agent):
 			for _io in _s.get('^io'):
 				for _ol in _io.get('^output-link'):
 					for _o in _s.get('^operator'):
-						for _name in o.get('^name', ('move', 'jump')):
+						for _name in o.get('^name', ('move jump')):
 							for _dir in _o.get('^direction'):
 								_d = ol.add('^' + _name)
-								_d.add('^direction', _dir)
+								_d.add('^direction ' + _dir)
 	
 	
 	'''
@@ -121,5 +125,5 @@ class JumpAgent(Agent):
 						for _name in _o.get('^name'):
 							for _direction in _ol.get('^' + _name):
 								for _v1 in _direction.get('^status'):
-									_ol.remove('^' + _name, _direction)
+									_ol.remove('^' + _name + ' ' + _direction)
 	

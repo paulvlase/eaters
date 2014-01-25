@@ -1,6 +1,7 @@
 
 from agent import Agent
-from datamap import Flag, Node
+from datamap import	Node
+
 
 class MoveNorthAgent(Agent):
 	
@@ -31,9 +32,9 @@ class MoveNorthAgent(Agent):
 	def propose_moveNorth(self):
 		
 		for _s in self.state.get('^state'):
-			for _t in s.get('^type', 'state'):
-				_o = s.add('^operator', '', Flag.PLUS)
-				_o.add('^name', 'move-north')
+			for _t in s.get('^type state'):
+				_o = s.add('^operator o +')
+				_o.add('^name move-north')
 	
 	
 	'''
@@ -62,9 +63,9 @@ class MoveNorthAgent(Agent):
 		
 		for _s in self.state.get('^state'):
 			for _o in _s.get('^operator'):
-				for _n in _o.get('^name', 'move-north'):
+				for _n in _o.get('^name move-north'):
 					for _io in _s.get('^io'):
 						for _ol in _io.get('^output-link'):
 							for _ol in _io.get('^output-link'):
 								_m = _ol.add('^move')
-								_m.add('^direction', 'north')
+								_m.add('^direction north')

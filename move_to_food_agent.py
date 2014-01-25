@@ -1,4 +1,8 @@
 
+from agent import Agent
+from datamap import	Node
+
+
 '''
 # This program proposes the move-to-food operator in any direction
 # that contains normal or bonus food.  If there is no food nearby, no
@@ -45,9 +49,9 @@ class MoveToFoodAgent(Agent):
 					for _ml in _il.get('^my-location'):
 						for _di in _ml.get(''):
 							for _co in _di.get('^content'):
-								o = _s.add('^operator', '', Flag.PLUS | Flag.EQUAL)
-								o.add('^name', 'move-to-food')
-								o.add('^direction', di.name)
+								o = _s.add('^operator o + =')
+								o.add('^name move-to-food')
+								o.add('^direction ' + di.name)
 	
 	
 	'''
@@ -69,7 +73,7 @@ class MoveToFoodAgent(Agent):
 			for _io in _s.get('^io'):
 				for _ol in _io.get('^output-link'):
 					for _o in _s.get('^operator'):
-						for _n in _o.get('^name', 'move-to-food'):
+						for _n in _o.get('^name move-to-food'):
 							for _di in _o.get('^direction'):
 								_d = _ol.add('^move')
 								_d.add(di.name)
@@ -95,7 +99,7 @@ class MoveToFoodAgent(Agent):
 			for _io in _s.get('^io'):
 				for _ol in _io.get('^output-link'):
 					for _o in _s.get('^operator'):
-						for _n in _o.get('^name', 'move-to-food'):
-							for _move in ol.get('^move'):
-								for _s in _move.get('^status', 'complete'):
-									_ol.remove('^move', _move)
+						for _n in _o.get('^name move-to-food'):
+							for _move in _ol.get('^move'):
+								for _s in _move.get('^status complete'):
+									_ol.remove('^move ' + _move)
