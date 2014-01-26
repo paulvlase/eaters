@@ -1,11 +1,11 @@
 
 class Block(object):
 
-	def __init__(self, i, j):
+	def __init__(self, x, y):
 
-		self.i = i
-		self.j = j
-
+		self.x = x
+		self.y = y
+	
 
 	def draw(self, painter):
 		pass

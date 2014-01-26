@@ -17,24 +17,24 @@ class MoveToFoodAgent(Agent):
 
 		self.color = 0xFF0000
 
-	
+
 	def proposePhase(self):
 		pass
-	
+
 	def decisionPhase(self):
 		pass
-	
+
 	def applyPhase(self):
 		pass
-	
+
 	'''
 	# Propose*move-to-food*normalfood
-	# If there is normalfood in an adjacent cell, 
+	# If there is normalfood in an adjacent cell,
 	#    propose move-to-food in the direction of that cell
 	#    and indicate that this operator can be selected randomly.
-	
+
 	sp {propose*move-to-food
-		(state <s> ^io.input-link.my-location.<dir>.content 
+		(state <s> ^io.input-link.my-location.<dir>.content
 								<< normalfood bonusfood >>)
 	-->
 		(<s> ^operator <o> + =)
@@ -42,8 +42,8 @@ class MoveToFoodAgent(Agent):
 			 ^direction <dir>)}
 	'''
 	def propose_moveToFood(self):
-		
-		for _s in self.state.get('^state'):
+
+		for _s in self.wm.get('^state'):
 			for _io in _s.get('^io'):
 				for _il in _io.get('^input-link'):
 					for _ml in _il.get('^my-location'):
@@ -52,13 +52,13 @@ class MoveToFoodAgent(Agent):
 								o = _s.add('^operator o + =')
 								o.add('^name move-to-food')
 								o.add('^direction ' + di.name)
-	
-	
+
+
 	'''
 	# Apply*move-to-food
 	# If the move-to-food operator for a direction is selected,
 	#    generate an output command to move in that direction.
-	
+
 	sp {apply*move-to-food
 		(state <s> ^io.output-link <ol>
 				   ^operator <o>)
@@ -68,8 +68,8 @@ class MoveToFoodAgent(Agent):
 		(<ol> ^move.direction <dir>)}
 	'''
 	def apply_moveToFood:
-		
-		for _s in self.state.get('^state'):
+
+		for _s in self.wm.get('^state'):
 			for _io in _s.get('^io'):
 				for _ol in _io.get('^output-link'):
 					for _o in _s.get('^operator'):
@@ -77,14 +77,14 @@ class MoveToFoodAgent(Agent):
 							for _di in _o.get('^direction'):
 								_d = _ol.add('^move')
 								_d.add(di.name)
-	
-	
+
+
 	'''
 	# Apply*move-to-food*remove-move:
 	# If the move-to-food operator is selected,
 	#    and there is a completed move command on the output link,
 	#    then remove that command.
-	
+
 	sp {apply*move-to-food*remove-move
 		(state <s> ^io.output-link <ol>
 				   ^operator.name move-to-food)
@@ -94,8 +94,8 @@ class MoveToFoodAgent(Agent):
 		(<ol> ^move <move> -)}
 	'''
 	def apply_moveToFood_removeMove:
-		
-		for _s in self.state.get('^state'):
+
+		for _s in self.wm.get('^state'):
 			for _io in _s.get('^io'):
 				for _ol in _io.get('^output-link'):
 					for _o in _s.get('^operator'):

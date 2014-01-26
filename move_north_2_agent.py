@@ -19,8 +19,8 @@ class MoveNorth2Agent(Agent):
 
 	def applyPhase(self):
 		pass
-	
-	
+
+
 	'''
 	# Propose*move-north:
 	# If I am at some location, then propose the move-north operator.
@@ -34,8 +34,8 @@ class MoveNorth2Agent(Agent):
 	}
 	'''
 	def propose_moveNorth(self):
-		
-		for _s in self.state.get('^state'):
+
+		for _s in self.wm.get('^state'):
 			for _io in _s.get('^io'):
 				for _il in _io.get('^input-link'):
 					for _e in _il.get('^eater'):
@@ -43,13 +43,13 @@ class MoveNorth2Agent(Agent):
 							for _y in _e.get('^y'):
 								_o = s.add('^operator o +')
 								_o.add('^name move-north')
-	
-	
+
+
 	'''
 	# Apply*move-north:
-	# If the move-north operator is selected, then generate an output command to 
+	# If the move-north operator is selected, then generate an output command to
 	# move north.
-	
+
 	sp {apply*move-north
 		(state <s> ^operator.name move-north
 				   ^io.output-link <ol>)
@@ -57,16 +57,16 @@ class MoveNorth2Agent(Agent):
 		(<ol> ^move.direction north)}
 	'''
 	def apply_moveNorth(self):
-		
-		for _s in self.state.get('^state'):
+
+		for _s in self.wm.get('^state'):
 			for _o in _s.get('^operator'):
 				for _n in _o.get('^name move-north'):
 					for _io in _s.get('^io'):
 						for _ol in _io.get('^output-link'):
 							_move = _ol.add('^move')
 							_move.add('^direction north')
-	
-	
+
+
 	'''
 	# Apply*move-north*remove-move
 	# If the move-north successfully performs a move command, then remove
@@ -81,8 +81,8 @@ class MoveNorth2Agent(Agent):
 		(<ol> ^move <move> -)}
 	'''
 	def apply_moveNorth_removeMove(self):
-		
-		for _s in self.state.get('^state'):
+
+		for _s in self.wm.get('^state'):
 			for _o in _s.get('^operator'):
 				for _n in _o.get('^name move-north'):
 					for _io in _s.get('^io'):
@@ -90,4 +90,3 @@ class MoveNorth2Agent(Agent):
 							for _move in _ol.get('^move'):
 								for _s in _move.get('^status'):
 									_ol.remove('^move ' + _move)
-	
